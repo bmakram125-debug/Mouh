@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بث مباشر - قنواتي</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body { font-family: sans-serif; background: #121212; color: white; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        header { padding: 20px; font-size: 24px; font-weight: bold; color: #ff4757; }
+        .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; width: 90%; }
+        #video-container { width: 100%; max-width: 800px; background: #000; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        video { width: 100%; display: block; }
+        .channels-list { width: 100%; max-width: 800px; display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 20px; }
+        .channel-card { background: #1e1e1e; padding: 15px; border-radius: 8px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid #333; }
+        .channel-card:hover { background: #ff4757; transform: translateY(-5px); }
+    </style>
+</head>
+<body>
+
+<header>📺 منصة المشاهدة المباشرة</header>
+
+<div id="video-container">
+    <video id="video" controls></video>
+</div>
+
+<div class="channels-list">
+    <div class="channel-card" onclick="playStream('https://test-streams.mux.dev/x36xhzz/url_2/14580/14580.m3u8')">قناة تجريبية 1</div>
+    <div class="channel-card" onclick="playStream('https://test-streams.mux.dev/x36xhzz/url_6/14580/14580.m3u8')">قناة تجريبية 2</div>
+    <div class="channel-card" onclick="playStream('https://test-streams.mux.dev/x36xhzz/url_8/14580/14580.m3u8')">قناة تجريبية 3</div>
+</div>
+
+<script>
+    const video = document.getElementById('video');
+
+    function playStream(url) {
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(url);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play();
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = url;
+            video.addEventListener('loadedmetadata', function() {
+                video.play();
+            });
+        }
+    }
+
+    // تشغيل القناة الأولى تلقائياً عند الفتح
+    window.onload = () => playStream('https://test-streams.mux.dev/x36xhzz/url_2/14580/14580.m3u8');
+</script>
+
+</body>
+</html>
